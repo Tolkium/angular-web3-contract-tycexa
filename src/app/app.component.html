@@ -1,0 +1,74 @@
+<mat-tab-group>
+	<mat-tab label="Contrato">
+		<mat-tab-group (selectedTabChange)="changeContract($event)">
+			<mat-tab label="Crear Contrato">
+				<form [formGroup]="formCreateContract">
+					<mat-form-field>
+
+						<input matInput formControlName='name' placeholder="name"/>
+       </mat-form-field>
+						<mat-form-field>
+							<input matInput formControlName='_symbol' placeholder="symbol" />
+       </mat-form-field>
+							<mat-form-field>
+								<input matInput formControlName='decimal' placeholder="decimal" />
+       </mat-form-field>
+								<!-- {{miContrato|json}} -->
+								<button [disabled]='formCreateContract.invalid' (click)="createContract()">Crear contrato</button>
+								<button *ngIf='!!miContrato' (click)='deployContract()'>Deploy contract</button>
+
+				</form>
+			</mat-tab>
+			<mat-tab label="Usar Contrato">
+				<form [formGroup]="formUseContract">
+					<mat-form-field>
+						<input matInput formControlName='address' placeholder="address" />
+       </mat-form-field>
+						<button [disabled]='formUseContract.invalid' (click)="useContract()">Utilizar contrato</button>
+				</form>
+				<h4>Metodos</h4>
+
+				<form [formGroup]="formMethod">
+					<mat-form-field>
+						<mat-label>Metodos</mat-label>
+						<mat-select [(ngModel)]="selectMethod" [ngModelOptions]="{standalone: true}"
+							(selectionChange)="selectionChange($event)">
+							<mat-select-trigger>
+								{{formMethod.controls.name.value}}
+							</mat-select-trigger>
+							<mat-option *ngFor="let method of methods" [value]="method">
+								{{method.name}}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+
+
+				</form>
+				<div *ngIf="formMethod.controls.args">
+					{{selectMethod.name|json}}
+					<div [formGroup]="formMethod">
+						<div formArrayName="args">
+							<div *ngFor="let item of formMethod.controls.args.controls;let i=index ">
+                <div [formGroupName]="i">
+                  		<input matInput formControlName='label' />
+								<input matInput formControlName='name' />
+								<input matInput  formControlName='type' placeholder="tipo" />
+                </div>
+
+						</div>
+					</div>
+	<button [disabled]="formMethod.invalid" (click)='exec()'> Exec</button>
+
+				</div>
+
+				</div>
+			
+			</mat-tab>
+
+		</mat-tab-group>
+	</mat-tab>
+	<mat-tab label="Cuenta"> Cuenta </mat-tab>
+</mat-tab-group>
+
+<button (click)='clean()'>Limpiar</button>
